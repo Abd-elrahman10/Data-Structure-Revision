@@ -1,0 +1,168 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class heap {
+private:
+    int* Heap; // dynamic array
+    int Cap;
+    int size;
+public:
+    heap() {
+        Cap = 1;
+        Heap = new int[Cap + 1]; // +1 because we're using 1-based indexing
+        size = 0;
+    }
+    int parent(int index){
+        return index/2;
+    }
+
+    ~heap() {
+        delete[] Heap;
+    }
+
+    void maxHeapify(int index) {
+        if (index > size) return; // base case
+
+        int largest = index;
+        int left = index * 2;
+        int right = (index * 2) + 1;
+
+        if (left <= size && Heap[left] > Heap[largest])
+            largest = left;
+        if (right <= size && Heap[right] > Heap[largest])
+            largest = right;
+
+        if (largest != index) {
+            swap(Heap[index], Heap[largest]);
+            maxHeapify(largest);
+        }
+    }
+    void minHeapify(int index){
+        if(index>size)return;
+        int min=index;
+        int left=index*2;
+        int right=(index*2)+1;
+        if (left<=size && Heap[left]<Heap[min])
+            min=left;
+        if(right<=size&&Heap[right]<Heap[min])
+            min=right;
+        if (min!=index){
+            swap(Heap[index],Heap[min]);
+            minHeapify(min);
+        }
+
+    }
+
+    void resize() {
+        int newCap = Cap * 2;
+        int* newHeap = new int[newCap + 1];
+
+        for (int i = 1; i <= size; ++i) {
+            newHeap[i] = Heap[i];
+        }
+
+        delete[] Heap;
+        Heap = newHeap;
+        Cap = newCap;
+    }
+
+    void insert(int value) {
+        if (size >= Cap) {
+            resize();
+        }
+        size++;
+        Heap[size] = value;
+
+        // Heapify from bottom to top(Build max heap)
+        for (int i = size / 2; i >= 1; --i) {
+          //  minHeapify(i);
+            maxHeapify(i);
+        }
+    }
+    void delettion(int value){
+
+        int index=-1;
+        for (int i = 1; i <= size; ++i) {
+            if(Heap[i]==value){
+               index=i;
+                break;
+            }
+        }
+        if(index<1){
+            cout<<"The value doesnt exist\n";
+            return;
+        }
+        Heap[index]= Heap[size--];
+        maxHeapify(index);
+    }
+    void increaseKey(int index,int key){
+        if(Heap[index]>key){
+            cout<<"The key is less than value!";
+            return;
+        }
+        Heap[index]=key;
+        while (index>1 &&index<=size &&Heap[parent(index)]<Heap[index]){
+            //swap(Heap[parent(index)],Heap[index]);
+            maxHeapify(parent(index));
+            index= parent(index);
+
+        }
+    }
+    void heapSort() {
+        for (int i = size/2; i >=1 ; --i) {
+            maxHeapify(i);
+        }
+
+        int originalSize = size; // Save original size
+
+        for (int i = size; i >= 2; i--) {
+            swap(Heap[1], Heap[i]); // Move current root to the end
+            size--;                 // Reduce heap size
+            maxHeapify(1);          // Restore max-heap property
+        }
+
+        size = originalSize; // Restore size if needed
+    }
+
+    void heapSortDesc(){
+        int originalSize=size;
+        for (int i = size/2; i >=1 ; --i) {
+            minHeapify(i);//build min heap
+        }
+        for (int i = size; i >=2 ; --i) {
+            swap(Heap[1],Heap[i]);
+            size--;
+            minHeapify(1);
+        }
+        size=originalSize;
+
+    }
+    void printHeap() {
+        for (int i = 1; i <= size; i++) {
+            cout << Heap[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    heap Heap;
+Heap.insert(10);
+Heap.insert(9);
+Heap.insert(8);
+Heap.insert(5);
+Heap.insert(4);
+Heap.insert(7);
+Heap.insert(6);
+   Heap.printHeap();
+Heap.increaseKey(7,11);
+   Heap.printHeap();
+Heap.delettion(11);
+    Heap.printHeap();
+Heap.heapSort();
+    Heap.printHeap();
+
+
+
+    return 0;
+}
