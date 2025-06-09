@@ -1,0 +1,116 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+class Node{
+public:
+    int val;
+    Node* left;
+    Node* right;
+    Node(int val){
+        this->val=val;
+        left=NULL;
+        right=NULL;
+    }
+
+};
+
+
+class BST{
+public:
+    Node* root= nullptr;
+
+    void insert(int val){
+        Node* newnode=new Node(val);
+
+        Node* temp =root;
+        Node*preNode=NULL;
+        if (temp==NULL){
+            root=newnode;///insert first node
+        }
+        else{
+            while (temp!=NULL){
+                preNode=temp;
+                if(val>temp->val)
+                    temp=temp->right;
+                else
+                    temp=temp->left;
+
+            }
+            if(val>preNode->val)
+                preNode->right= newnode;
+            else preNode->left=newnode;
+
+        }
+
+
+    }
+
+
+    Node* FindMax(Node* n){///Find predecessor
+        if (n==NULL)return NULL;
+        if(n->right==NULL)return n;
+        else FindMax(n->right);
+    }
+    Node* FindMin(Node* n){///Find successor
+        if(n==NULL) return NULL;
+        if(n->left==NULL)return n;
+        else FindMin(n->left);
+    }
+
+
+    Node* deletion(Node* n,int key){
+        if (n==NULL)return NULL;
+        if (key>n->val)
+            n->right= deletion(n->right,key);///Search for key
+        else if (key<n->val)
+            n->left= deletion(n->left,key);
+        else{
+            if (n->right==NULL && n->left==NULL)  ///leaf node
+                 n=NULL;
+
+
+           else if(n->right==NULL && n->left!=NULL){///one child in left
+                 n->val=n->left->val;
+                 n->left=NULL;
+               }
+           else if(n->left==NULL && n->right!=NULL){///one child in right
+                n->val=n->right->val;
+                n->right=NULL;
+            }
+           else{
+               /*Node* predecessor= FindMax(n->left);///Node has two children
+               n->val=predecessor->val;
+             n->left=deletion(n->left,predecessor->val);*/
+             ///Successor
+             Node* successor= FindMin(n->right);
+             n->val=successor->val;
+             n->right= deletion(n->right,successor->val);
+           }
+
+
+
+        }
+        return n;
+    }
+
+
+    void print(Node* n){///inorder
+        if (n==NULL)return;
+        print(n->left);
+        cout<<n->val<<" ";
+        print(n->right);
+    }
+};
+int main() {
+    BST bst;
+    bst.insert(5);
+    bst.insert(10);
+    bst.insert(4);
+    bst.insert(12);
+    bst.print(bst.root);
+    cout<<endl;
+    bst.deletion(bst.root,5);
+    bst.print(bst.root);
+
+    return 0;
+}
