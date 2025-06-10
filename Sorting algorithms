@@ -13,6 +13,7 @@ template<class T>
 class insertion : public Sorting<T>{
 public:
 void sort(T arr[],int size) override{
+    cout<<"Insertion sort\n";
     for (int i = 1; i < size; ++i) {
        T temp=arr[i];
        int j=i-1;
@@ -33,6 +34,7 @@ template<class T>
 class selection: public Sorting<T>{
 public:
     void sort(T arr[],int size) override{
+        cout<<"Selection sort\n";
 
         for(int i=0;i<size-1;i++){
             int minIndex = i;
@@ -66,6 +68,10 @@ public:
 template<class T>
 class Shell:public Sorting<T>{
     void shell(int arr[],int size,int k){
+        if(k<=1){
+            cout<<"Shell sort\n";
+            return;
+        }
         for(int i=k; i<size;i++){
             int j=i;
             while (j>=k && arr[j]<arr[j-k]){
@@ -76,7 +82,9 @@ class Shell:public Sorting<T>{
 
     }
     void sort(int arr[],int size)override{
+
         int k=size/2;
+
         while (k){
             shell(arr,size,k);
             k/=2;
