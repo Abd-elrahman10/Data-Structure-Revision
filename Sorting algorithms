@@ -92,6 +92,56 @@ class Shell:public Sorting<T>{
     }
 };
 ///-------------------------------------------------------------------------------
+/// Merge sort
+template<class T>
+class Merge: public Sorting<T>{
+public:
+    void merge_sort(int arr[],int l,int m,int r){
+        int n1 = m - l + 1;
+        int n2 = r - m;
+        int Larr[n1];
+        int Rarr[n2];
+        for (int i = 0; i < n1; ++i) {
+            Larr[i]=arr[i+l];
+        }
+        for (int j = 0; j < n2; ++j) {
+            Rarr[j]=arr[j+m+1];
+        }
+        int i = 0, j = 0,k=l;
+
+        while (i<n1 && j<n2 ){
+            if(Larr[i]<=Rarr[j]){
+                arr[k++]=Larr[i++];
+            }
+            else{
+                arr[k++]=Rarr[j++];
+            }
+        }
+        while (i<n1){
+            arr[k++]=Larr[i++];
+        }
+        while (j<n2){
+            arr[k++]=Rarr[j++];
+        }
+
+
+
+    }
+    void merge(int arr[],int l,int r){
+        if(l>=r)return;
+        int m=(l+r)/2;
+        merge(arr,l,m);
+        merge(arr,m+1,r);
+        merge_sort(arr, l, m, r);
+    }
+void sort(int arr[],int size)override{
+        cout<<"Merge sort\n";
+    merge(arr,0,size-1);
+    }
+
+
+};
+///-------------------------------------------------------------------------------
 /// Context Class
 template<class T>
 class SorterContext {
@@ -119,8 +169,11 @@ int main() {
     selection<int>selection;
     bubble<int>bubble;
     Shell<int>shell;
+    Merge<int>merge;
+
     SorterContext<int> sorter;
-    sorter.setStrategy(&shell);
+
+    sorter.setStrategy(&merge);
     sorter.sort(arr,n);
     for (int i = 0; i < n; ++i) {
         cout<<arr[i]<<" ";
