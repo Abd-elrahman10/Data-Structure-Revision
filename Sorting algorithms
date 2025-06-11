@@ -142,6 +142,51 @@ void sort(int arr[],int size)override{
 
 };
 ///-------------------------------------------------------------------------------
+///Quick sort
+template<class T>
+class Quick : public Sorting<T>{
+public:
+    int partition(int arr[], int l, int r) {
+        int pivot = arr[l];  // First element as pivot
+        int i = l + 1;       // index for the smaller element
+        int j = r;
+
+        while (true) {
+
+            while (i <= r && arr[i] <= pivot)
+                i++;
+
+           
+            while (arr[j] > pivot)
+                j--;
+
+            if (i >= j)
+                break;
+
+            // Swap arr[i] and arr[j]
+            swap(arr[i], arr[j]);
+        }
+
+        // Place pivot in its correct position
+        swap(arr[l], arr[j]);
+        return j;
+    }
+
+// QuickSort function
+    void quickSort(int arr[], int low, int high) {
+        if (low < high) {
+            int pivotIndex = partition(arr, low, high);
+            quickSort(arr, low, pivotIndex - 1);
+            quickSort(arr, pivotIndex + 1, high);
+        }
+    }
+    void sort(int arr[],int size)override{
+        cout<<"Quick sort\n";
+        quickSort(arr,0,size-1);
+    }
+
+};
+///-------------------------------------------------------------------------------
 /// Context Class
 template<class T>
 class SorterContext {
@@ -170,10 +215,11 @@ int main() {
     bubble<int>bubble;
     Shell<int>shell;
     Merge<int>merge;
+    Quick<int>Quick;
 
     SorterContext<int> sorter;
 
-    sorter.setStrategy(&merge);
+    sorter.setStrategy(&Quick);
     sorter.sort(arr,n);
     for (int i = 0; i < n; ++i) {
         cout<<arr[i]<<" ";
