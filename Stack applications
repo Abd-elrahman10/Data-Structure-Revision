@@ -1,0 +1,113 @@
+#include <iostream>
+#include <stack>
+using namespace std;
+///Check parentheses balance
+bool check(string& s) {
+    stack<char> sck;
+
+    for (char c : s) {
+        if (c == '(' || c == '{' || c == '[') {
+            sck.push(c);
+        }
+        else if (c == ')' || c == '}' || c == ']') {
+            if (sck.empty()) return false;
+
+            char top = sck.top();
+
+            if ((c == ')' && top == '(') ||
+                (c == '}' && top == '{') ||
+                (c == ']' && top == '['))
+                sck.pop();
+
+
+        }
+    }
+
+    return sck.empty();
+}
+
+
+///Evaluate postfix expression
+int evaluateExpressoin(string s){
+    stack<int> sck;
+    for (int i = 0; i < s.size(); ++i) {
+        if (s[i] == ' ') continue;
+
+
+        if (isdigit(s[i])) {
+            int num = 0;
+            while (i < s.size() && isdigit(s[i])) {
+                num = num*10+ (s[i] - '0');
+                ++i;
+            }
+            sck.push(num);
+            --i;
+        }
+        else if(s[i] == '*'){
+            int firstElem = sck.top(); sck.pop();
+            int secondElem = sck.top(); sck.pop();
+            int result = secondElem * firstElem;
+            sck.push(result);
+        }
+        else if(s[i] == '+'){
+            int firstElem = sck.top(); sck.pop();
+            int secondElem = sck.top(); sck.pop();
+            int result = secondElem + firstElem;
+            sck.push(result);
+        }
+        else if(s[i] == '-'){
+            int firstElem = sck.top(); sck.pop();
+            int secondElem = sck.top(); sck.pop();
+            int result = secondElem - firstElem;
+            sck.push(result);
+        }
+        else if(s[i] == '/'){
+            int firstElem = sck.top(); sck.pop();
+            int secondElem = sck.top(); sck.pop();
+            if (firstElem == 0) throw runtime_error("Division by zero");
+            int result = secondElem / firstElem;
+            sck.push(result);
+        }
+    }
+    return sck.top();
+}
+
+///Big integer addition
+void BigInteger(string s1,string s2){
+    stack<int>operand1;
+    stack<int>operand2;
+    stack<int>result;
+    int carry=0;
+    for (int i = 0; i < s1.size(); ++i) {
+        operand1.push(s1[i]-'0');
+    }
+    for (int i = 0; i < s2.size(); ++i) {
+        operand2.push(s2[i]-'0');
+    }
+    while (!operand1.empty() && !operand2.empty() ){
+        int d1=operand1.top();operand1.pop();
+        int d2=operand2.top();operand2.pop();
+        if(d2+d1+carry>9){
+            result.push((d1+d2+carry)-10);
+            carry=1;
+        }
+        else{
+            result.push((d1+d2+carry));
+            carry=0;
+        }
+    }
+    if(operand1.empty() && operand2.empty() && carry==1){
+        result.push(carry);
+    }
+    while (!result.empty()){
+        int top=result.top();
+        cout<<top;
+        result.pop();
+    }
+}
+
+int main() {
+
+    BigInteger("631","427");
+    return 0;
+}
