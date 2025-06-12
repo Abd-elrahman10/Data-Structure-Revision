@@ -84,9 +84,19 @@ void BigInteger(string s1,string s2){
     for (int i = 0; i < s2.size(); ++i) {
         operand2.push(s2[i]-'0');
     }
-    while (!operand1.empty() && !operand2.empty() ){
-        int d1=operand1.top();operand1.pop();
-        int d2=operand2.top();operand2.pop();
+    while (!operand1.empty() || !operand2.empty() ){
+
+       int d1,d2;
+       if(!operand1.empty()) {
+           d1=operand1.top();operand1.pop();
+       }
+       else {d1=0;}
+       
+       if(!operand2.empty()) {
+            d2=operand2.top();operand2.pop();
+        }
+       else{d2=0;}
+       
         if(d2+d1+carry>9){
             result.push((d1+d2+carry)-10);
             carry=1;
@@ -108,6 +118,6 @@ void BigInteger(string s1,string s2){
 
 int main() {
 
-    BigInteger("631","427");
+    BigInteger("73","427");
     return 0;
 }
